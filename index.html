@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Voting System</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <div id="homePage">
+            <h1>Welcome to the Voting System</h1>
+            <button onclick="showPage('loginCard')">Login as User</button>
+            <button onclick="showPage('adminLoginCard')">Login as Admin</button>
+            <button onclick="showPage('signupCard')">Sign Up</button>
+        </div>
+
+        <!-- Admin Login -->
+        <div id="adminLoginCard" class="card">
+            <h2>Admin Login</h2>
+            <input type="text" id="adminUsername" placeholder="Admin Username">
+            <input type="password" id="adminPassword" placeholder="Admin Password">
+            <button onclick="loginAdmin()">Login</button>
+            <button onclick="showPage('homePage')">Back</button>
+        </div>
+
+        <!-- Admin Panel -->
+        <div id="adminPanel" class="card">
+            <h2>Admin Panel</h2>
+            <input type="text" id="voteTitle" placeholder="Vote Title">
+            <input type="date" id="startDate">
+            <input type="date" id="endDate">
+            <input type="text" id="voteOption" placeholder="Add Option">
+            <button onclick="addOption()">Add Option</button>
+            <ul id="optionList"></ul>
+            <button onclick="createOrUpdateVote()">Create / Update Vote</button>
+
+            <h3>Live Votes</h3>
+            <ul id="liveVotesList"></ul>
+            <button onclick="showPage('homePage')">Logout</button>
+        </div>
+
+        <!-- User Signup -->
+        <div id="signupCard" class="card">
+            <h2>Sign Up</h2>
+            <input type="text" id="newUsername" placeholder="Username">
+            <input type="password" id="newPassword" placeholder="Password">
+            <button onclick="signupUser()">Sign Up</button>
+            <button onclick="showPage('homePage')">Back</button>
+        </div>
+
+        <!-- User Login -->
+        <div id="loginCard" class="card">
+            <h2>User Login</h2>
+            <input type="text" id="userLogin" placeholder="Username">
+            <input type="password" id="userPassword" placeholder="Password">
+            <button onclick="loginUser()">Login</button>
+            <button onclick="showPage('homePage')">Back</button>
+        </div>
+
+        <!-- Voting Page -->
+        <div id="voteCard" class="card">
+            <h2 id="pollQuestionText">Vote Here</h2>
+            <div id="optionsContainer"></div>
+            <button onclick="submitVote()">Submit Vote</button>
+            <button onclick="showPage('homePage')">Logout</button>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
