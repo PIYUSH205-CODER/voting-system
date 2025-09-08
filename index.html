@@ -1,71 +1,294 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Voting System</title>
-    <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ultra 3D Calculator - Piyush Creation</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: "Segoe UI", sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background: linear-gradient(135deg, #1e1e2f, #141e30);
+      background-size: 300% 300%;
+      animation: gradientMove 10s infinite alternate;
+      transition: background 0.3s;
+    }
+    @keyframes gradientMove {
+      from { background-position: left top; }
+      to { background-position: right bottom; }
+    }
+    :root {
+      --bg: #141e30;
+      --fg: #00ffcc;
+      --btn: #2b2b3d;
+      --btn-hover: #444466;
+    }
+    .light {
+      --bg: #f4f4f4;
+      --fg: #333;
+      --btn: #ddd;
+      --btn-hover: #bbb;
+      background: linear-gradient(135deg, #f4f4f4, #ddd);
+    }
+    .calculator {
+      background: rgba(30, 30, 50, 0.6);
+      backdrop-filter: blur(20px);
+      padding: 25px;
+      border-radius: 20px;
+      width: 460px;
+      box-shadow: 0px 8px 25px rgba(0,0,0,0.6),
+                  inset 0px 2px 6px rgba(255,255,255,0.1);
+      display: flex;
+      flex-direction: column;
+      transform: perspective(1000px) rotateX(5deg);
+      transition: transform 0.4s ease;
+    }
+    .calculator:hover {
+      transform: perspective(1000px) rotateX(0deg) scale(1.02);
+    }
+    .logo {
+      text-align: center;
+      font-size: 1.4em;
+      font-weight: bold;
+      margin-bottom: 12px;
+      color: var(--fg);
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      text-shadow: 0px 0px 12px rgba(0,255,200,0.8);
+    }
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+    .mode-toggle {
+      padding: 8px;
+      font-size: 0.9em;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    .display {
+      background: rgba(0, 0, 0, 0.85);
+      color: var(--fg);
+      font-size: 1.8em;
+      padding: 15px;
+      border-radius: 12px;
+      text-align: right;
+      margin-bottom: 10px;
+      box-shadow: inset 0px 4px 8px rgba(0,0,0,0.8),
+                  0px 0px 15px rgba(0,255,200,0.4);
+      overflow-x: auto;
+    }
+    .history {
+      background: #1c1c2e;
+      color: #aaa;
+      font-size: 0.9em;
+      padding: 10px;
+      border-radius: 8px;
+      height: 60px;
+      overflow-y: auto;
+      margin-bottom: 15px;
+    }
+    .buttons {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 10px;
+    }
+    button {
+      position: relative;
+      overflow: hidden;
+      padding: 14px;
+      font-size: 1.05em;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      background: linear-gradient(145deg, #2b2b3d, #1d1d2c);
+      color: white;
+      box-shadow: 4px 4px 10px rgba(0,0,0,0.6),
+                  -3px -3px 8px rgba(255,255,255,0.05);
+      transition: all 0.15s ease-in-out;
+      transform-style: preserve-3d;
+    }
+    button::after {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 10px;
+      height: 10px;
+      background: rgba(0,255,200,0.6);
+      border-radius: 50%;
+      transform: translate(-50%, -50%) scale(0);
+      opacity: 0;
+      pointer-events: none;
+    }
+    button:active::after {
+      animation: ripple 0.6s ease-out;
+    }
+    @keyframes ripple {
+      0% { transform: translate(-50%, -50%) scale(0); opacity: 0.6; }
+      100% { transform: translate(-50%, -50%) scale(15); opacity: 0; }
+    }
+    button:hover {
+      transform: translateY(-3px) scale(1.05);
+      box-shadow: 0px 6px 15px rgba(0,255,200,0.6);
+    }
+    button:active {
+      transform: translateY(2px) scale(0.95);
+      box-shadow: inset 3px 3px 6px rgba(0,0,0,0.7),
+                  inset -3px -3px 6px rgba(255,255,255,0.05);
+      background: linear-gradient(145deg, #1d1d2c, #2b2b3d);
+    }
+    .equal {
+      grid-column: span 2;
+      background: linear-gradient(145deg, #00cc99, #009966);
+      color: black;
+    }
+    .equal:hover {
+      background: linear-gradient(145deg, #00ffaa, #00dd88);
+      box-shadow: 0px 0px 20px rgba(0,255,200,0.8);
+    }
+    .clear {
+      background: linear-gradient(145deg, #ff4d4d, #cc0000);
+    }
+    .clear:hover {
+      background: linear-gradient(145deg, #ff6666, #ff1a1a);
+      box-shadow: 0px 0px 15px rgba(255,100,100,0.8);
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <div id="homePage">
-            <h1>Welcome to the Voting System</h1>
-            <button onclick="showPage('loginCard')">Login as User</button>
-            <button onclick="showPage('adminLoginCard')">Login as Admin</button>
-            <button onclick="showPage('signupCard')">Sign Up</button>
-        </div>
+  <div class="calculator">
+    <div class="logo">✨ Piyush Creation ✨</div>
 
-        <!-- Admin Login -->
-        <div id="adminLoginCard" class="card">
-            <h2>Admin Login</h2>
-            <input type="text" id="adminUsername" placeholder="Admin Username">
-            <input type="password" id="adminPassword" placeholder="Admin Password">
-            <button onclick="loginAdmin()">Login</button>
-            <button onclick="showPage('homePage')">Back</button>
-        </div>
-
-        <!-- Admin Panel -->
-        <div id="adminPanel" class="card">
-            <h2>Admin Panel</h2>
-            <input type="text" id="voteTitle" placeholder="Vote Title">
-            <input type="date" id="startDate">
-            <input type="date" id="endDate">
-            <input type="text" id="voteOption" placeholder="Add Option">
-            <button onclick="addOption()">Add Option</button>
-            <ul id="optionList"></ul>
-            <button onclick="createOrUpdateVote()">Create / Update Vote</button>
-
-            <h3>Live Votes</h3>
-            <ul id="liveVotesList"></ul>
-            <button onclick="showPage('homePage')">Logout</button>
-        </div>
-
-        <!-- User Signup -->
-        <div id="signupCard" class="card">
-            <h2>Sign Up</h2>
-            <input type="text" id="newUsername" placeholder="Username">
-            <input type="password" id="newPassword" placeholder="Password">
-            <button onclick="signupUser()">Sign Up</button>
-            <button onclick="showPage('homePage')">Back</button>
-        </div>
-
-        <!-- User Login -->
-        <div id="loginCard" class="card">
-            <h2>User Login</h2>
-            <input type="text" id="userLogin" placeholder="Username">
-            <input type="password" id="userPassword" placeholder="Password">
-            <button onclick="loginUser()">Login</button>
-            <button onclick="showPage('homePage')">Back</button>
-        </div>
-
-        <!-- Voting Page -->
-        <div id="voteCard" class="card">
-            <h2 id="pollQuestionText">Vote Here</h2>
-            <div id="optionsContainer"></div>
-            <button onclick="submitVote()">Submit Vote</button>
-            <button onclick="showPage('homePage')">Logout</button>
-        </div>
+    <div class="top-bar">
+      <select id="mode" class="mode-toggle" onchange="changeMode()">
+        <option value="standard">Standard</option>
+        <option value="scientific">Scientific</option>
+        <option value="programmer">Programmer</option>
+      </select>
+      <button class="mode-toggle" onclick="toggleTheme()">🌙/☀️</button>
     </div>
-    <script src="script.js"></script>
+
+    <div class="display" id="display">0</div>
+    <div class="history" id="history">History:</div>
+    <div class="buttons" id="buttons"></div>
+  </div>
+
+  <script>
+    const display = document.getElementById("display");
+    const historyDiv = document.getElementById("history");
+    const buttonsDiv = document.getElementById("buttons");
+    let mode = "standard";
+    let theme = "dark";
+    let history = [];
+
+    const layouts = {
+      standard: [
+        "7","8","9","/","C","⌫",
+        "4","5","6","*","(",")",
+        "1","2","3","-",".","%",
+        "0","+","="
+      ],
+      scientific: [
+        "sin","cos","tan","log","ln","√",
+        "π","e","x²","x³","^","!",
+        "7","8","9","/","(",")",
+        "4","5","6","*","1/x","%",
+        "1","2","3","-",".","+",
+        "0","=","C","⌫"
+      ],
+      programmer: [
+        "BIN","OCT","DEC","HEX","C","⌫",
+        "A","B","C","D","E","F",
+        "7","8","9","+","-","*",
+        "4","5","6","/","(",")",
+        "1","2","3","%","<<",">>",
+        "0","=","AND","OR","XOR","NOT"
+      ]
+    };
+
+    function renderButtons() {
+      buttonsDiv.innerHTML = "";
+      layouts[mode].forEach(label => {
+        const btn = document.createElement("button");
+        btn.textContent = label;
+        btn.onclick = () => handleInput(label);
+        if (label === "=") btn.classList.add("equal");
+        if (label === "C") btn.classList.add("clear");
+        buttonsDiv.appendChild(btn);
+      });
+    }
+
+    function handleInput(value) {
+      if (value === "C") { display.innerText = "0"; return; }
+      if (value === "⌫") { display.innerText = display.innerText.slice(0, -1) || "0"; return; }
+      if (value === "=") { calculate(); return; }
+
+      if (value === "√") value = "Math.sqrt(";
+      if (value === "π") value = "Math.PI";
+      if (value === "e") value = "Math.E";
+      if (value === "x²") value = "**2";
+      if (value === "x³") value = "**3";
+      if (value === "log") value = "Math.log10(";
+      if (value === "ln") value = "Math.log(";
+      if (["sin","cos","tan"].includes(value)) value = "Math."+value+"(";
+      if (value === "!") { display.innerText += "!"; return; }
+
+      if (["BIN","OCT","DEC","HEX"].includes(value)) { convertBase(value); return; }
+
+      display.innerText = display.innerText === "0" ? value : display.innerText + value;
+    }
+
+    function factorial(n) {
+      return n <= 1 ? 1 : n * factorial(n - 1);
+    }
+
+    function calculate() {
+      try {
+        let expression = display.innerText;
+        if (expression.includes("!")) {
+          expression = expression.replace(/(\d+)!/g, (_, num) => factorial(parseInt(num)));
+        }
+        let result = eval(expression);
+        display.innerText = result;
+        history.push(`${expression} = ${result}`);
+        historyDiv.innerText = "History:\n" + history.slice(-5).join("\n");
+      } catch { display.innerText = "Error"; }
+    }
+
+    function changeMode() {
+      mode = document.getElementById("mode").value;
+      renderButtons();
+      clearDisplay();
+    }
+
+    function toggleTheme() {
+      if (theme === "dark") {
+        document.body.classList.add("light");
+        theme = "light";
+      } else {
+        document.body.classList.remove("light");
+        theme = "dark";
+      }
+    }
+
+    function clearDisplay() { display.innerText = "0"; }
+
+    function convertBase(type) {
+      let num = parseInt(display.innerText);
+      if (isNaN(num)) return;
+      if (type === "BIN") display.innerText = num.toString(2);
+      if (type === "OCT") display.innerText = num.toString(8);
+      if (type === "DEC") display.innerText = num.toString(10);
+      if (type === "HEX") display.innerText = num.toString(16).toUpperCase();
+    }
+
+    renderButtons();
+  </script>
 </body>
 </html>
